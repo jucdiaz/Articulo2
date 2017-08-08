@@ -1,0 +1,737 @@
+% -------------------------------------------------------------------------------------
+% Plantilla de un artículo para publicar en la Revista Colombiana de Estadística
+% *************************************************************************************
+% -------------------------------------------------------------------------------------
+% Establecer primero el idioma principal del artículo, por defecto es español; para
+% utilizar otro idioma, cambiar el comando "\documentclass{revcoles}" por el comando
+% "\documentclass[english]{revcoles}" o por "\documentclass[portuguese]{revcoles}"
+% **** --------------------------------------------------------------------------------
+\documentclass[]{revcoles}
+% -------------------------------------------------------------------------------------
+% Espacio reservado para la carga de los paquetes por parte del autor
+% **** --------------------------------------------------------------------------------
+
+\usepackage[latin1]{inputenc}
+\markright{}
+
+\usepackage[spanish]{babel}
+\usepackage{amsxtra}
+\usepackage{amstext}
+\usepackage{graphicx, xcolor, lipsum}
+\usepackage{amssymb}
+\usepackage{latexsym}
+\usepackage{amsmath,amsthm} 
+\usepackage{bm} 
+\usepackage{textcomp}
+\usepackage{setspace} 
+\usepackage{lscape} 
+\usepackage{multicol}
+\usepackage{multirow} 
+\usepackage{float}
+
+
+% //// --------------------------------------------------------------------------------
+% -------------------------------------------------------------------------------------
+% Espacio reservado para colocar las definiciones especiales por parte del autor
+% **** --------------------------------------------------------------------------------
+\hypersetup{pagebackref,colorlinks,linkcolor=black,citecolor=black,breaklinks=true}
+\usepackage{enumitem}  % format a list as to remove the spaces between list items
+\usepackage{upquote}   % to obtain ' instead of ’ with R code
+% New for newcommand, proglang and code
+\newcommand{\pkg}[1]{{\normalfont\fontseries{b}\selectfont #1}}
+\let\proglang=\textsf
+\let\code=\texttt
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Definición del color para el cuadro de código de R
+\let\oldv\verbatim
+\let\oldendv\endverbatim
+\def\verbatim{\par\setbox0\vbox\bgroup\oldv}
+%\def\endverbatim{\oldendv\egroup\fboxsep0pt \noindent\colorbox[gray]{0.96}{\usebox0}\par}
+\definecolor{fhbcolor}{HTML}{F7F9EF} % Para definir el color de la caja
+\def\endverbatim{\oldendv\egroup\fboxsep0pt \noindent\colorbox{fhbcolor}{\usebox0}\par}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+% //// --------------------------------------------------------------------------------
+% -------------------------------------------------------------------------------------
+% Espacio utilizado para colocar las palabras que necesitan partición silábica
+% **** --------------------------------------------------------------------------------
+\hyphenation{Colombia mul-ti-va-ria-do pro-ba-bi-li-dad es-ta-dís-ti-ca}
+% //// --------------------------------------------------------------------------------
+\begin{document}
+% -------------------------------------------------------------------------------------
+% Espacio reservado para ingresar el título del artículo
+% "maintitle = " título original del artículo
+% "secondtitle = " título del artículo traducido al idioma alterno
+% "shorttitle = " título corto (opcional) para el encabezado
+% **** --------------------------------------------------------------------------------
+\title[maintitle = Análisis de regresión para datos proporcionales inflados con ceros y/o unos utilizando el paquete \pkg{ZOIP} en \proglang{R},
+       secondtitle = Regression analysis for proportional data inflated with zeros and ones using \pkg{ZOIP} package in \proglang{R},
+       shorttitle = Regresión ZOIP
+]
+% //// --------------------------------------------------------------------------------
+% -------------------------------------------------------------------------------------
+% Espacio reservado para ingresar el(los) autor(es) del artículo de forma individual.
+% opción "firstname = " nombres completos de cada autor
+% opción "surname = " primer apellido de cada autor
+% opción "numberinstitution = " número que identifica la institución a la que pertenece
+%         el autor, en caso de haber solo una institución el campo puede ser eliminado
+% opción "affiliation = " afiliación o cargo que desempeña el autor en la institución
+% opción "email = " dirección electrónica del autor (preferiblemente institucional)
+% **** --------------------------------------------------------------------------------
+\begin{authors}
+\author[firstname = Juan Camilo,
+        surname = Díaz Zapata,
+				numberinstitution = 1,
+        affiliation = Estudiante de maestría en estadística,
+        email =jucdiazza@unal.edu.co]
+\author[firstname = Freddy,
+        surname = Hernández Barajas,
+        numberinstitution = 1,
+        affiliation = Profesor asistente,
+        email = fhernanb@unal.edu.co]
+%\author[firstname = Olga Cecilia,
+        %surname = Usuga Manco,
+        %numberinstitution = 2,
+        %affiliation = Profesora asociada,
+        %email = olga.usuga@udea.edu.co]
+\end{authors}
+% //// --------------------------------------------------------------------------------
+% -------------------------------------------------------------------------------------
+% Espacio reservado para ingresar la información de la(s) institución(es) a la(s)
+% cual(es) pertenece(n) el(los) autor(es)
+% Usar un comando "\institute"  por cada una de las diferentes instituciones.
+% Los campos "subdivision" y "division" son opcionales
+% Los campos "institution", "city" y "country" son obligatorios
+% **** --------------------------------------------------------------------------------
+\begin{institutions}
+     \institute[subdivision = Escuela de Estadística,
+                division = Facultad de Ciencias,
+                institution = Universidad Nacional de Colombia,
+                city = Medellín,
+                country = Colombia]
+     %\institute[subdivision = Departamento de Ingenieria,
+                %division = Facultad de Ingenieria,
+                %institution = Universidad de Antioquia,
+                %city = Medellín,
+                %country = Colombia]
+\end{institutions}
+% //// --------------------------------------------------------------------------------
+% -------------------------------------------------------------------------------------
+% CUERPO DEL DOCUMENTO
+% **** --------------------------------------------------------------------------------
+% -------------------------------------------------------------------------------------
+% Espacio reservado para colocar el resumen en el idioma principal y las palabras clave
+% !!No dejar salto de línea entre el resumen y el comando \keywords{.}¡¡
+% **** --------------------------------------------------------------------------------
+\begin{mainabstract}
+Los datos obtenidos a partir de  variables medidas bajo porcentajes, tasas o proporciones, suelen dar resultados con valores de cero y/o uno, conociéndose como datos proporcionales inflados con ceros y/o unos, para un caso de estudio donde se quiera explicar este tipo de datos a partir de otras variables, se estará hablando de modelo de regresión para datos proporcionales inflados con ceros y/o unos, en la literatura estadística se han desarrollado diferentes modelos que dan solución a este problema y es el modelo de regresión beta inflado con ceros y/o unos que se encuentra construido bajo tres diferentes parametrizaciones, la parametrización original, la parametrización de \citeasnoun{Stasinopoulos2} y la de \citeasnoun{Ferrari2}, además de la distribución beta existen otros tipos de modelos que tratan este problema, el modelo de regresión simplex inflado con ceros y/o unos \cite{Galvis1} es uno de ellos, sin embargo no existe un modelo de regresión basado en las principales distribuciones para datos proporcionales  inflados con ceros y/o unos que lo haga en una sola función, además a pesar de que el modelo de regresión beta inflado con ceros y/o unos de \citeasnoun{Stasinopoulos2} se encuentra implementado en \proglang{R}, y que este requiere utilizar diferentes funciones para ajustar el modelo de regresión, dependiendo si los datos son inflados solo con ceros, unos, o ambos, no existe un paquete en \proglang{R} que lo haga en una sola función para diferentes distribuciones y parametrizaciones. En este trabajo se busca implementar mediante el paquete \pkg{ZOIP} de \proglang{R} un modelo de regresión que se base en las principales distribuciones para datos proporcionales inflados con ceros y/o unos (Modelo de regresión ZOIP), mediante  la distribución ZOIP (Zeros Ones Inflated Proportional), estimando los parámetros vía máxima verosimilitud, en una sola función. Se realiza un estudio de simulación que muestra la convergencia satisfactoria de los parámetros de los diferentes modelos aplicados y se aplica el modelo de regresión ZOIP a datos reales.
+%
+\keywords{Datos proporcionales inflados, Regresion ZOIP, Máxima verosimilitud, \proglang{R}}
+\end{mainabstract}
+% //// --------------------------------------------------------------------------------
+% -------------------------------------------------------------------------------------
+% Espacio reservado para colocar el resumen en el idioma secundario y las palabras clave
+% !!No dejar salto de línea entre el resumen y el comando \keywords{.}¡¡
+% **** --------------------------------------------------------------------------------
+\begin{secondaryabstract}
+Los datos obtenidos a partir de  variables medidas bajo porcentajes, tasas o proporciones, suelen dar resultados con valores de cero y/o uno, conociéndose como datos proporcionales inflados con ceros y/o unos, para un caso de estudio donde se quiera explicar este tipo de datos a partir de otras variables, se estará hablando de modelo de regresión para datos proporcionales inflados con ceros y/o unos, en la literatura estadística se han desarrollado diferentes modelos que dan solución a este problema y es el modelo de regresión beta inflado con ceros y/o unos que se encuentra construido bajo tres diferentes parametrizaciones, la parametrización original, la parametrización de \citeasnoun{Stasinopoulos2} y la de \citeasnoun{Ferrari2}, además de la distribución beta existen otros tipos de modelos que tratan este problema, el modelo de regresión simplex inflado con ceros y/o unos \cite{Galvis1} es uno de ellos, sin embargo no existe un modelo de regresión basado en las principales distribuciones para datos proporcionales  inflados con ceros y/o unos que lo haga en una sola función, además a pesar de que el modelo de regresión beta inflado con ceros y/o unos de \citeasnoun{Stasinopoulos2} se encuentra implementado en \proglang{R}, y que este requiere utilizar diferentes funciones para ajustar el modelo de regresión, dependiendo si los datos son inflados solo con ceros, unos, o ambos, no existe un paquete en \proglang{R} que lo haga en una sola función para diferentes distribuciones y parametrizaciones. En este trabajo se busca implementar mediante el paquete \pkg{ZOIP} de \proglang{R} un modelo de regresión que se base en las principales distribuciones para datos proporcionales inflados con ceros y/o unos (Modelo de regresión ZOIP), mediante  la distribución ZOIP (Zeros Ones Inflated Proportional), estimando los parámetros vía máxima verosimilitud, en una sola función. Se realiza un estudio de simulación que muestra la convergencia satisfactoria de los parámetros de los diferentes modelos aplicados y se aplica el modelo de regresión ZOIP a datos reales.
+%
+\keywords{Datos proporcionales inflados, Regresion ZOIP, Máxima verosimilitud, \proglang{R}}
+\end{secondaryabstract}
+% //// --------------------------------------------------------------------------------
+% -------------------------------------------------------------------------------------
+% Título de la primera sección
+% **** --------------------------------------------------------------------------------
+\section{Introducción}
+
+Los datos obtenidos a partir de variables medidas bajo porcentajes, tasas y proporciones, son llamados datos proporcionales y estos se encuentran ubicados por lo general en el intervalo (0,1), sin embargo existen casos de este tipo de variables pueden dar resultados de cero y/o uno, representando la ausencia o presencia total de la característica medida a partir de una variable, este tipo de datos son conocidos como datos proporcionales inflados con ceros y/o unos, existen diferentes distribuciones que explican estos datos, tales como la distribución beta inflada con ceros o unos \cite{Ospina2} o de una manera más general la distribución ZOIP (Zeros Ones inflated Proportional) que busca reunir la distribución simplex y beta bajo diferentes parametrizaciones en una sola distribución.\\
+
+En muchos casos de estudios es factible preguntarse cómo puede ser explicada una variable aleatoria proveniente de datos proporcionales a partir de diferentes variables, es decir un modelo de regresión para datos proporcionales, el modelo más conocido en la literatura para este tipo de datos es la regresión beta, donde \citeasnoun{Paolino1} estima mediante máxima verosimilitud modelos de variables dependientes de una distribución beta, utilizando la parametrización original, más adelante  \citeasnoun{Ferrari2} reparametrizan la distribución e introducen la regresión beta bajo esta nueva parametrización, más adelante en el paquete \pkg{betareg} de \proglang{R} \cite{Zeileis1} implementan dicha regresión. Por otro parte \citeasnoun{Stasinopoulos2} también realizan otra reparametrización de la distribución beta original, basado en parámetros como la media y la dispersión, además introducen un modelo de regresión beta basado en dicha distribución y lo implementan en el paquete \pkg{gamlss} de \proglang{R}, sin embargo existen otros tipos de regresiones basadas en otras distribuciones, como la regresión simplex, que se encuentra bajo la distribución para datos proporcionales simplex \cite{Barndorff1}, dicha regresión fue realizada por \citeasnoun{Qiu1} e implementada en el paquete \pkg{simplexreg} de \proglang{R} \cite{Zhang1}.\\
+
+Sin embargo los anteriores modelos de regresión son realizados para datos proporcionales no inflados con ceros o unos, es por esto que \citeasnoun{Ospina1} realizan un modelo de regresión inflado con cero o con uno, no con ambos, bajo la distribución beta inflada de \citeasnoun{Ospina2} con parametrización \citeasnoun{Ferrari2}, de igual manera \citeasnoun{Stasinopoulos2} implementan los modelos de regresión beta inflados en ceros y/o unos, y se encuentran implementados en el paquete \pkg{gamlss} de \proglang{R} \cite{Stasinopoulos1}, sin embargo para la utilización del modelo de regresión inflado solo con ceros o unos o con ambos, se deben utilizar funciones distintas dentro del paquete para ajustar los tres diferentes modelos de regresión. Además no existen paquetes en \proglang{R} que logren ajustar un modelo de regresión beta inflado con ceros y/o unos bajo las parametrizaciones originales y de \citeasnoun{Ferrari2}, por otra parte a pesar de que existen desarrollos teóricos sobre el modelo de regresión simplex inflado con ceros y/o unos \cite{Galvis1}, no existe un paquete en \proglang{R} que permita realizar un ajuste sobre dicho modelo de regresión.\\
+
+Es por esto que en este trabajo se implementa de manera teórica y de forma práctica mediante el paquete \pkg{ZOIP} en el sistema de computación \proglang{R} \cite{R} y disponible en el repositorio web \verb|GitHub|, un modelo de regresión para datos proporcionales inflados con ceros y/o unos (Modelo de regresión ZOIP) que permita mediante una misma función ajustar modelos en diferentes distribuciones para datos proporcionales y en diferentes parametrizaciones.\\
+
+El artículo se encuentra organizado de la siguiente manera: primero se presenta la distribución ZOIP, en la siguiente sección el modelo de regresión ZOIP y su debida estimación, en la sección número cuatro se presenta unas aplicaciones a datos simulados y a datos reales y por último se presenta la implementación del modelo de regresión ZOIP en el paquete \pkg{ZOIP} de \proglang{R}.
+
+
+\section{Distribución ZOIP (Zero One Inflated Proporcional)}
+
+Las distribuciones que se ajustan al comportamiento de datos proporcionales, porcentajes o tasas están en el intervalo (0,1), sin embargo, es común que estos datos tomen valores en cero y/o uno, que representarían la ausencia o presencia total de cierta característica, por lo que no sería posible ajustar los datos a una distribución para datos proporcionales como común la distribución beta o simplex, es por eso que es desarrollada la distribución ZOIP, como un conjunto de distribuciones para datos proporcionales inflados con ceros y/o unos.\\
+
+La distribución para datos proporcionales inflados con ceros y/o unos se compone de la mezcla de tres distribuciones, dos de ellas discretas, que son distribuciones degeneradas en cero y uno, y una tercera distribución que es continua y además es una función de densidad de probabilidad para datos proporcionales, para este artículo se tomaran la distribución beta original, es decir, con parámetros $p>0$ y $q>0$, la distribución beta parametrización propuesta por \citeasnoun{Ferrari2}, la distribución beta con parametrización dada por \citeasnoun{Stasinopoulos2} y la distribución simplex presentada por \citeasnoun{Barndorff1}. Si la variable aleatoria $y$ tiene distribución ZOIP con parámetros $\mu$, $\sigma$, $p_0$ y $p_1$, se denotará como $y \sim ZOIP(\mu,\sigma, p_0, p_1)$, la función de densidad de probabilidad está dado por:
+
+\begin{equation}
+g(y;\mu,\sigma, p_{0}, p_{1})=
+\begin{cases}
+p_{0} & \text{si}\ y=0,\\
+p_{1} & \text{si}\ y=1,\\
+(1-p_{0}-p_{1})f(y;\mu,\sigma) & \text{si}\ y \in (0,1)
+\end{cases}
+ \label{eq_Dist_ZOIP}
+\end{equation}
+
+donde $p_{0} \geq 0$ representa la probabilidad que $y=0$ y $p_{1} \geq 0$ representa la probabilidad de que $y=1$, además $0\leq p_{0}+p_{1}\leq 1$ y $f(y;\mu,\sigma)$ representa alguna función de densidad de probabilidad para datos proporcionales. La media y varianza de $y$, están dadas por
+
+\begin{align}
+\begin{split}
+	E(y) &= p_1+(1-p_0-p_1)E^*(y)
+\end{split}\\
+\begin{split}
+	Var(y) &= p_1(1-p1)+(1-p_0-p_1)\left[Var^*(y)+(p_0+p_1)[E^*(y)]^2-2E^*(y)p_1\right]
+\end{split}
+\end{align}
+
+donde $E^*(y)$ y $Var^*(y)$ es el valor esperado y la varianza de una distribución para datos proporcionales, respectivamente.\\
+
+Si para la distribución $ZOIP(\mu, \sigma, p_0, p_1)$ se elige la distribución beta con parametrización \citeasnoun{Ferrari2} entonces el parámetro $\sigma$ tomará el rol del parámetro $\phi$ donde $\phi>0$ \cite{Ferrari2}, si la parametrización es beta original $\mu$ y $\sigma$ tomarán el rol de $p$ y $q$, respectivamente, donde $p>0$ y $q>0$. En las demás distribuciones y parametrizaciones tenidas en cuenta $\mu$ y $\sigma$ tomaran valores entre cero y uno.\\
+
+En general la distribución ZOIP puede estar inflada bilateralmente (con ceros y unos a la misma vez) o unilateralmente (solo con ceros o unos, no ambos), de esta forma si $p_0=0$ entonces tendríamos una distribución OIP (Ones Inflated Proporcional) y si $p_1=0$  se tendría una distribución ZIP (Zeros Inflated Proporcional), si $p_0=p_1=0$ se tendrán valores clásicos de las distribuciones proporcionales.\\
+
+En la figura \ref{Dist_ZOIP} se muestra una gráfica donde se evidencia el comportamiento de las distribuciones ZOIP-beta en sus diferentes parametrizaciones y ZOIP-simplex, es de aclarar que en las figuras 1a. 1b. 1c. los valores de los parámetros son diferentes pero dan como resultado la misma distribución ZOIP-beta, ya que existen ecuaciones de equivalencias que permiten cambiar de una parametrización de la distribución beta a otra fácilmente. Además se puede observar en la figura 1d. Como la distribución ZOIP-simplex hereda el comportamiento  bimodal de la distribución simplex común, con valores mínimo y máximo en cero y uno respectivamente.
+%en el anterior parrafo se puede citar el articulo1_1
+
+\begin{figure}
+	\begin{center}
+		\includegraphics[scale=0.5]{Dist_ZOIP.eps}
+		\caption{Representación de la distribución ZOIP para algunos valores de los parámetros, donde R-S se refiere a Rigby \& Stasinopoulos (2008) y F-C es Ferrari \& Cribari-Neto (2004)}
+		\label{Dist_ZOIP}
+	\end{center}
+\end{figure}
+
+\section{Modelo de regresión ZOIP}
+
+Una clase general de modelos de regresión ZOIP puede definirse como sigue. Sea $y_1, y_2,\ldots, y_n$ variables aleatorias independientes tal que cada $y_i$, para $i=1,\ldots, n$, tiene función de densidad de probabilidad \eqref{eq_Dist_ZOIP} con parámetros $\mu = \mu_i$, $\sigma=\sigma_i$,  $p_0=p_{0i}$, y $p1=p_{1i}$. Se asume que $\mu_i$, $\sigma_i$, $p_{0i}$ y $p_{1i}$ se definen como
+
+\begin{equation}
+\begin{split}
+&h_1(\mu_{i})=\mathbf{x}_{i1}^{\top} \boldsymbol{\beta}_1,\\
+&h_2(\sigma_{i})=\mathbf{x}_{i2}^{\top} \boldsymbol{\beta}_2,\\
+&h_3(p_{0i})=\mathbf{x}_{i3}^{\top} \boldsymbol{\beta}_3,\\
+&h_4(p_{1i}) =\mathbf{x}_{i4}^{\top} \boldsymbol{\beta}_4
+\end{split}
+\label{eq_reg}
+\end{equation}
+
+donde $\mathbf{x}_{i1}=(x_{i11}, x_{i12},\ldots, x_{i1k_1})$, $\mathbf{x}_{i2}=(x_{i21}, x_{i22},\ldots, x_{i2k_2})$, \\
+$\mathbf{x}_{i3}=(x_{i31}, x_{i32},\ldots, x_{i1k_3})$ y $\mathbf{x}_{i4}=(x_{i41}, x_{i42},\ldots, x_{i1k_4})$, son vectores de covariables conocidos de dimensión $k_1$, $k_2$, $k_3$ y $k_4$ respectivamente, $\boldsymbol{\beta}_1=(\beta_{11}, \beta_{12},\ldots, \beta_{1k_1})$, $\boldsymbol{\beta}_2=(\beta_{21}, \beta_{22},\ldots, \beta_{2k_2})$, $\boldsymbol{\beta}_3=(\beta_{31}, \beta_{32},\ldots, \beta_{3k_3})$ y $\boldsymbol{\beta}_4=(\beta_{41}, \beta_{42},\ldots, \beta_{4k_4})$ son vectores de parámetros de regresión desconocidos. Además se asume que las funciones de enlace $h_1:(0,1) \rightarrow \mathbb{R}$, $h_2:(0,1) \rightarrow \mathbb{R}$, $h_3:(0,1) \rightarrow \mathbb{R}$ y $h_4:(0,1) \rightarrow \mathbb{R}$ son estrictamente monótonas y doblemente diferenciables. Las posibles funciones para el parámetro $\mu$ y $\sigma$ son logit, probit, clog-log, o log dependiendo de la parametrización,  para los parámetros de inflación $p_0$ y $p_1$ son posibles funciones de enlace como logit, probit, clog-log.
+
+\subsection{Inferencia estadística}
+
+Para estimar los parámetros del modelo de regresión ZOIP, se usará el método de máxima verosimilitud. La función de verosimilitud para $\boldsymbol{\theta}=(\boldsymbol{\beta_1}^{\top},\boldsymbol{\beta_2}^{\top},\boldsymbol{\beta_3}^{\top}, \boldsymbol{\beta_4}^{\top})^{\top}$, basado en una muestra de observaciones independientes, es de la forma:
+
+\begin{equation}
+L(\boldsymbol{\theta})=\prod_{i=1}^{n}g(\mathbf{y}_i;\mu_i,\sigma_i,p_{0i},p_{1i}) 
+\label{F_likel}
+\end{equation}
+
+%\[
+%\ell(\boldsymbol{\theta})=\sum_{i=1}^{n}{\ell_i(\mu_i,\sigma_i,p_{0i},p_{1i}) }
+%\]
+
+donde para el caso de ZOIP-beta original $\mu_i=p_i$, $\sigma_i=q_i$; si la distribución ZOIP-beta fuese con parametrización de \citeasnoun{Ferrari2} el único parámetro que cambiaría es $\sigma_i=\phi_i$, el resto de los parámetros no tendrían modificaciones según su parametrización o distribución.\\
+
+La función de verosimilitud definida en \eqref{F_likel} al aplicar logaritmo natural se obtiene la función de log verosimilitud definida como:
+\[
+\ell(\boldsymbol{\theta})=\ell_1(\boldsymbol{\beta_3})+\ell_2(\boldsymbol{\beta_4})+\ell_3(\boldsymbol{\beta_1},\boldsymbol{\beta_2})
+\]
+\\
+Note que la función de verosimilitud es factorizada en tres términos, dos de ellos del componente discreto y uno compuesto por $\boldsymbol{\beta_1}$ y $\boldsymbol{\beta_2}$ del componente continuo, por tanto los parámetros son separables \cite{Pace1}, así la máxima verosimilitud puede ser tratada por separado y por lo tanto:\\
+\begin{align*}
+\begin{split}
+	\ell_1(\boldsymbol{\beta_3}) &= \sum_{i=1}^{n}{p_{0i}^{S_0(y_i)}(1-p_{0i})^{1-S_0(y_i)}}
+\end{split}\\
+\begin{split}
+	\ell_2(\boldsymbol{\beta_4}) &= \sum_{i=1}^{n}{p_{1i}^{S_1(y_i)}(1-p_{1i})^{1-S_1(y_i)}}
+\end{split}\\
+\begin{split}
+	\ell_3(\boldsymbol{\beta_1},\boldsymbol{\beta_2}) &= \sum_{i=1:y_i \in (0,1)}^{n}{f(y_i;\mu_i,\sigma_i)} 
+\end{split}
+\end{align*}
+
+Con
+\[
+S_j(y_i)=
+\begin{cases}
+1 & \text{si}\ y_i=j\\
+0 & \text{si}\ y_i\neq j\\
+\end{cases}
+\quad ; \quad j=1,2
+\]
+\\
+Con $p_{0i}=h_3^{-1}(\mathbf{x}_{i3}^{\top} \boldsymbol{\beta}_3)$, $p_{1i}=h_4^{-1}(\mathbf{x}_{i4}^{\top} \boldsymbol{\beta}_4)$, $\mu_i=h_1^{-1}(\mathbf{x}_{i1}^{\top} \boldsymbol{\beta}_1)$ y $\sigma_i=h_2^{-1}(\mathbf{x}_{i2}^{\top} \boldsymbol{\beta}_2)$ como se definio en \eqref{eq_reg}. La funcion de verosimilitud depende de tres terminos, el primero depende de  $\boldsymbol{\beta}_3$ (componente discreto para inflación en cero), el segundo de $\boldsymbol{\beta}_4$ (componente discreto para explicar la inflación en uno) y el tercero depende de $(\boldsymbol{\beta}_1,\boldsymbol{\beta}_2)$ (Componentes para explicar la parte continua), por lo tanto los parámetros son separables y la inferencia de máxima verosimilitud para $\boldsymbol{\beta}_1$ y $\boldsymbol{\beta}_2$ se puede hacer por separado de la de $\boldsymbol{\beta}_3$ y $\boldsymbol{\beta}_4$, como si conociera a $\boldsymbol{\beta}_3$ y $\boldsymbol{\beta}_4$ y viceversa. \cite{Ospina1}.\\
+
+No existen expresiones que den una solución cerrada analíticamente para encontrar los máximos de las  funciones de log verosimilitudes descritas anteriormente, para así hallar los estimadores de máxima verosimilitud de los parámetros de regresión de cada uno de los componentes de la distribución ZOIP.  Por lo que es necesario utilizar algoritmos de optimización no lineal como el método de Newton-Raphson o Fisher's scoring, para nuestro caso utilizaremos el algoritmo de optimización dado por la función \code{nlminb} o \code{optim} del paquete \code{stats} de \proglang{R} e implementado en el paquete \pkg{ZOIP} de \proglang{R} para el modelo de regresión ZOIP.
+
+\section{Paquete \pkg{ZOIP}}
+
+En esta sección presentaremos el paquete \pkg{ZOIP} realizado en \proglang{R} para ajustar un modelo de regresión ZOIP.
+
+\subsection{Instalación}
+
+La versión más actualizada del paquete \pkg{ZOIP} se encuentra ubicada en \verb|GitHub|, el cual es un alojamiento de repositorios Git, para obtener dicha versión es necesario ejecutar el siguiente código que instala el devtools que es necesario para descargar el paquete \pkg{ZOIP}.
+
+\begin{verbatim}
+if (!require('devtools')) install.packages('devtools')
+devtools::install_github('jucdiaz/ZOIP', force=TRUE)
+require(ZOIP)  # Carga el paquete
+\end{verbatim}
+
+\subsection{Función RM.ZOIP}
+
+La función \code{RM.ZOIP} estima los parámetros de un modelo ZOIP con y sin covariables vía máxima verosimilitud utilizando el optimizador \code{nlminb}. La estructura de la función \code{RM.ZOIP} es la siguiente:
+
+\begin{verbatim}
+RM.ZOIP(formula.mu,formula.sigma=~1,formula.p0=~1,formula.p1=~1,
+				data,link=c('identity','identity','identity','identity'),
+				family='R-S')
+\end{verbatim}
+
+Los argumentos de la función \code{RM.ZOIP} son:
+
+\begin{itemize}[noitemsep, nolistsep]
+
+\item \code{formula.mu}: Formula que define la función de regresión para el parámetro $\mu$, Un valor posible es \code{y $\sim$ x1 + x2}, es necesario definir la variable respuesta (y).
+\item \code{formula.sigma}: Formula que define la función de regresión para el parámetro $\sigma$, Un valor posible es \code{$\sim$ x1}. Por defecto \code{$\sim$ 1}.
+\item \code{formula.p0}: Formula que define la función de regresión para el parámetro $p_0$, Un valor posible es \code{$\sim $x1}. Por defecto \code{$\sim $1}.
+\item \code{formula.p1}: Formula que define la función de regresión para el parámetro $p_1$, Un valor posible es \code{$\sim $x1}. Por defecto \code{$\sim $1}.
+\item \code{data}: es el conjunto de datos en formato \code{data.frame} donde debe contener las nombres de las columnas tal cual como están en las fórmulas.
+\item \code{family}: Elección de la parametrización de la distribución beta o distribución deseada en la parte continua de la distribución ZOIP, si toma el valor de \code{`R-S'} se utilizara la distribución beta con parametrización  \citeasnoun{Stasinopoulos2}, si toma el valor de \code{`F-C'} se utilizara la distribución beta parametrización \citeasnoun{Ferrari2}, el valor de \code{`Original'} se utilizara la distribución beta con parametrización original, \code{`Simplex'} Utilizara la distribución simplex.
+\item \code{link}: Es un vector con las funciones enlace adecuadas para cada parámetro a estimar de acuerdo a las opciones escogidas en los parámetros de familia y formula. Si el modelo de regresión no posee covariables se debe utilizar como función enlace la opción \code{identity}, independientemente del valor escogido en familia, opciones posibles son \code{logit}, \code{log}. Por defecto \code{link=c(`identity',`identity',`identity',`identity')}.
+\item \code{optimizer}: Elección del optimizador, utilizado para la convergencia de la máxima verosimilitud.
+\end{itemize}
+
+En el siguiente ejemplo nos concentraremos en el ajuste de un modelo regresión ZOIP, para ello se mostrará el código utilizado y la salida de la función \code{RM.ZOIP}, para una variable aleatoria simulada de una distribución ZOIP-beta con parametrización \citeasnoun{Stasinopoulos2} y dos covariables simuladas a partir de una distribución uniforme entre cero y uno, el tamaño de la muestra simulada es 1000. Esto replicando exactamente uno de los casos de simulación vistos en la próxima sección.\\
+
+Primero se simula la variable respuesta a partir de la función \code{rZOIP} con los debidos valores de los parámetros para cada observación, y las covariables.
+
+\begin{verbatim}
+devtools::install_github('jucdiaz/ZOIP', force=TRUE)
+library(ZOIP)
+n<-1000
+x1<-runif(n);x2<-runif(n)
+
+c1<-0.2;c2<--1
+mu_i<-inv.logit(c1+c2*x1)
+
+b1<-0.3;b2<-3;b3<-0.9
+sigma_i<-inv.logit(b1+b2*x1+b3*x2)
+
+d1<-0.07
+p0_i<-rep(d1,n)
+
+e1<-0.02;e2<--4
+p1_i<-inv.logit(e1+e2*x2)
+
+param<-cbind(mu_i,sigma_i,p0_i,p1_i)
+y_i<-apply(param,1,function(x){rZOIP(1,mu=x[1],sigma=x[2]
+                                     ,p0=x[3],p1=x[4]
+                                     ,family='R-S')})
+data<-as.data.frame(cbind(y_i,x1,x2))
+
+link=c('logit','logit','identity','logit')
+mod<-RM.ZOIP(formula.mu=y_i~x1,formula.sigma=~x1+x2
+             ,formula.p0=~1,formula.p1=~x2
+             ,data=data,link=link,family='R-S')
+summary(mod)
+\end{verbatim}
+
+Los resultados obtenidos se muestran a continuación.
+
+\begin{verbatim}
+---------------------------------------------------------------
+Fixed effects for logit(mu)
+---------------------------------------------------------------
+            Estimate Std. Error z value  Pr(>|z|)    
+(intercept)  0.35500    0.09953  3.5668 0.0003614 ***
+x1          -1.52936    0.18172 -8.4158 < 2.2e-16 ***
+---
+Signif. codes:  0 *** 0.001 ** 0.01 * 0.05 . 0.1   1
+---------------------------------------------------------------
+Fixed effects for logit(sigma)
+---------------------------------------------------------------
+            Estimate Std. Error z value  Pr(>|z|)    
+(intercept)  0.30456    0.10158  2.9983  0.002715 ** 
+x1           2.67959    0.13954 19.2030 < 2.2e-16 ***
+x2           1.03339    0.12824  8.0585 7.723e-16 ***
+---
+Signif. codes:  0 *** 0.001 ** 0.01 * 0.05 . 0.1   1
+---------------------------------------------------------------
+Fixed effects for identity(p0)
+---------------------------------------------------------------
+             Estimate Std. Error z value  Pr(>|z|)    
+(intercept) 0.0710777  0.0081293  8.7434 < 2.2e-16 ***
+---
+Signif. codes:  0 *** 0.001 ** 0.01 * 0.05 . 0.1   1
+---------------------------------------------------------------
+Fixed effects for logit(p1)
+---------------------------------------------------------------
+            Estimate Std. Error z value Pr(>|z|)    
+(intercept) -0.20773    0.14623 -1.4205   0.1555    
+x2          -3.15715    0.33901 -9.3128   <2e-16 ***
+---
+Signif. codes:  0 *** 0.001 ** 0.01 * 0.05 . 0.1   1
+---------------------------------------------------------------
+---------------------------------------------------------------
+\end{verbatim}
+
+\section{Aplicación}
+En esta sección se muestran diferentes resultados sobre el ajuste de un modelo de regresión ZOIP, por medio del paquete \pkg{ZOIP}, primero se realizó un estudio de simulación para analizar la convergencia de la estimación de los parámetros regresores de una regresión ZOIP, y en segunda instancia se ajusta un modelo de regresión ZOIP a datos reales, sobre cómo puede ser explicado el porcentaje de utilización de una tarjeta de crédito (tdc) de una entidad financiera con diferentes variables del negocio.
+
+\subsection{Datos simulados}
+En el estudio de simulación se analizan diferentes aspectos de la capacidad de estimación que tiene el método de máxima verosimilitud sobre los parámetros regresores de un modelo de regresión ZOIP. Para comprobar esto se generaron muestras pertenecientes a una distribución ZOIP a partir de dos variables aleatorias uniformes cero uno, con tamaños de muestra de 25, 50, 75, y 100 a partir de este punto no se realizarán incrementos de 25 si no de 100, es decir 100, 200, 300 hasta 3500, y se realizaron 1000 réplicas para cada tamaño de muestra, posteriormente se calculó la mediana de la estimación de cada parámetro regresor para cada distribución y parametrización utilizada. A continuación, se muestra la estructura simulada para cada parámetro de la distribución ZOIP.
+
+\begin{equation}
+\begin{split}
+&h_1(\mu_{i})=\beta_0+\beta_1x_{1i}+\epsilon_i,\\
+&h_2(\sigma_{i})=\beta_0+\beta_1x_{1i}+\beta_2x_{2i}+\epsilon_i,\\
+&h_3(p_0)=\beta_0+\epsilon_i,\\
+&h_4(p_1) =\beta_0+\beta_1x_{2i}+\epsilon_i
+\end{split}
+\label{S_eq_reg}
+\end{equation}
+
+Donde para la regresión de $\mu$: $\beta_0=0.2$ y $\beta_1=-1$, para la de $\sigma$ se escogieron dos escenarios distintos si la regresión a modelar es ZOIP-beta parametrización de \citeasnoun{Stasinopoulos2}, entonces: $\beta_0=0.3$, $\beta_1=-2$, $\beta_2=-4$, para las demás parametrización y distribuciones $\beta_0=0.3$, $\beta_1=3$, $\beta_2=0.9$, esto para tener una variabilidad de los datos moderada. Para el parámetro $p_0$: $\beta_0=0.07$ y para $p_1$: $\beta_0=0.02$ y $\beta_1=-4$ para todos los casos posibles de selección de la regresión ZOIP, y $x_{1i} \sim U(0,1)$, $x_{2i} \sim U(0,1)$. Las funciones de enlace adecuadas para cada distribución y parametrización se muestran en la tabla \ref{T_F_enlace}.
+
+\begin{table}[!hbt]
+{\scriptsize
+\begin{center}
+\begin{tabular}{|c|c|c|}\hline
+Familia & Parámetro & $h(\cdot)$ \\ \hline
+\multirow{4}{*}{R-S \footnotemark[1]} & $\mu$ & Logit \\
+ & $\sigma$ & Logit \\
+ & $p_0$ & NA \\
+ & $p_1$ & Logit \\ \hline
+
+\multirow{4}{*}{F-C \footnotemark[2]} & $\mu$ & Logit \\
+ & $\sigma$ & Log. \\
+ & $p_0$ & NA \\
+ & $p_1$ & Logit \\ \hline
+
+\multirow{4}{*}{original} & $\mu$ & Log. \\
+ & $\sigma$ & Log. \\
+ & $p_0$ & NA \\
+ & $p_1$ & Logit \\ \hline
+
+\multirow{4}{*}{simplex} & $\mu$ & Logit \\
+ & $\sigma$ & Log. \\
+ & $p_0$ & NA \\
+ & $p_1$ & Logit \\ \hline
+
+\end{tabular}
+\caption{Funciones de enlace adecuadas para cada parámetro, según su distribución y/o parametrización.}
+\label{T_F_enlace}
+\end{center}
+}
+\end{table}
+
+\begin{figure}
+	\begin{center}
+		\includegraphics[scale=0.5]{Converg_RS.eps}	
+		\caption{Simulación de un modelo de regresión ZOIP-beta para la parametricazion R-S con diferentes valores de $n$.}
+		\label{Simu_RS}
+	\end{center}
+\end{figure}
+
+En la figura \ref{Simu_RS} se describen los valores estimados para diferentes valores de tamaño de muestra, cuando se elige realizar una regresión ZOIP-beta con parametrización de \citeasnoun{Stasinopoulos2}, en ella se ve como todos los parámetros estimados oscilan alrededor del valor real del parámetro que es representado por la línea roja, sin embargo, se nota como unos parámetros tienen una oscilación mayor que otros, como es el caso de los parámetros de intercepto de la media y el del parámetro de inflación de unos, asociada a $p_1$. Los de más parámetros convergen rápidamente a sus valores reales, como los parámetros que representan la variabilidad ($\sigma$) y el parámetro de $p_0$.   
+
+\begin{figure}
+	\begin{center}
+		\includegraphics[scale=0.5]{Converg_FC.eps}	
+		\caption{Simulación de un modelo de regresión ZOIP-beta para la parametricazion F-C con diferentes valores de $n$.}
+		\label{Simu_FC}
+	\end{center}
+\end{figure}
+
+En la figura \ref{Simu_FC} se describen los valores estimados para diferentes tamaños de muestra, cuando se elige realizar una regresión ZOIP-beta con parametrización de \citeasnoun{Ferrari2}, en dicha figura se nota como la estimación de los parámetros asociados con la media tienen una oscilación mayor que los demás parámetros, sin embargo, en todos los parámetros se obsserva como a medida que el tamaño de muestra es más grande la oscilación de los parámetros es menor y van convergiendo satisfactoriamente a sus valores reales.
+
+\begin{figure}
+	\begin{center}
+		\includegraphics[scale=0.5]{Converg_Ori.eps}	
+		\caption{Simulación de un modelo de regresión ZOIP-beta para la parametricazion original con diferentes valores de $n$.}
+		\label{Simu_Ori}
+	\end{center}
+\end{figure}
+
+En la figura \ref{Simu_Ori} se describen los valores estimados para diferentes tamaños de muestra, cuando se elige realizar una regresión ZOIP-beta con parametrización original, se puede ver como con los valores del escenario de simulación elegidos, se obtiene una distribución ZOIP con mayor variabilidad, por lo que los valores de los parámetros asociados a $\sigma$ tienen una mayor oscilación, sin embargo, este oscila solo en un 0.01 de sus unidades, lo que no es preocupante. Por otra parte, se observa como el parámetro de intercepto del parámetro de inflación de unos ($p_1$) si oscila mucho más ya que este tiene una desviación estándar de 0.04 en promedio, pero se observa como a través de que el tamaño de muestra es mayor la oscilación va dis\-mi\-nu\-yen\-do, por lo que se sospecha que se necesita un mayor tamaño de muestra para que esta converja con mayor satisfacción.
+
+\begin{figure}
+	\begin{center}
+		\includegraphics[scale=0.5]{Converg_Simplex.eps}	
+		\caption{Simulación de un modelo de regresión ZOIP-simplex con diferentes valores de $n$.}
+		\label{Simu_simplex}
+	\end{center}
+\end{figure}
+
+En la figura \ref{Simu_simplex} se describen los valores estimados para diferentes tamaños de muestra, cuando se elige realizar una regresión ZOIP-simplex, Se nota como todos los parámetros oscilan alrededor de los valores verdaderos y como estas oscilaciones se van reduciendo a través de que el tamaño de muestra crece, sin embargo, unos parámetros toman mayor tiempo de convergencia como es el parámetro $\beta_1$ asociado al parámetro de dispersión ($\sigma$).
+
+
+
+\begin{table}[!hbt]
+{\scriptsize
+\begin{center}
+\begin{tabular}{|c|cc|ccc|c|cc|}\hline
+\multirow{2}{*}{Familia} & \multicolumn{2}{|c|}{$\mu$} & \multicolumn{3}{|c|}{$\sigma$} & $p_0$ & \multicolumn{2}{|c|}{$p_1$} \\ \cline{2-9}
+& $\hat{\beta_0}$& $\hat{\beta_1}$& $\hat{\beta_0}$& $\hat{\beta_1}$& $\hat{\beta_2}$& $\hat{\beta_0}$ & $\hat{\beta_0}$ & $\hat{\beta_1}$ \\ \hline \hline
+R-S & 1.25 & 0.32 & 1.45 & 2.55 & 1.38 & 4.86 & 383.09 & 4.88 \\ 
+F-C & 14.22 & 3.96 & 22.21 & 2.9 & 10.14 & 4.86 & 91.21 & 4.88 \\
+original & 22.34 & 8.03 & 22.55 & 3.62 & 8.69 & 4.84 & 90.58 & 4.96 \\
+simplex & 13.93 & 5.89 & 24.49 & 3.11 & 11.01 & 4.85 & 91.15 & 4.81 \\ \hline
+\end{tabular}
+\caption{Mediana del MAPE (Error porcentual absoluto medio) en porcentaje para los diferentes parametros en las diferentes parametrizaciones.}
+\label{MAPE}
+\end{center}
+}
+\end{table}
+
+En la tabla \ref{MAPE} se muestra la mediana del MAPE de los diferentes parámetros regresores para cada posible caso de la distribución o parametrización de la distribución ZOIP, en dicha tabla se nota como el MAPE en los interceptos de cualquier regresión asociada a los parámetros de la distribución ZOIP son un poco más grandes que los demás parámetros regresores de cada regresión, además se comete un MAPE más grande en las regresiones asociadas a todos los parámetros de inflación, esto nos permite concluir que hallar los parámetros verdaderos en los parámetros de inflación es un poco más difícil que en los parámetros de localización y escala como lo son $\mu$ y $\sigma$, esto se debe a que se posee una menor cantidad de datos en cero y uno, en este escenario de simulación elegido. Por otro lado, el intercepto asociado a la regresión del parámetro de inflación de los unos posee un MAPE muy grande, por lo que nos permite concluir que a pesar de que los diferentes parámetros estimados en la simulación oscilan alrededor del valor real este todavía tiene una variabilidad muy grande por lo que hace que este MAPE sea grande y el parámetro no haya convergido con un tamaño de muestra de 3500.
+
+\begin{figure}
+	\begin{center}
+		\includegraphics[scale=0.5]{MAPE_gnral.eps}	
+		\caption{Mape (Error porcentual absoluto medio) para modelo de regresion ZOIP simulado para distintas parametrizaciones y valores de $n$.}
+		\label{Mape_gnrl}
+	\end{center}
+\end{figure}
+
+En la figura \ref{Mape_gnrl} se muestra la mediana del MAPE de la mediana del MAPE de todos los parámetros asociados a cada parametrización y distribución para diferentes tamaños de muestra, en ella se evidencia como el caso de la regresión ZOIP-beta con parametrización \citeasnoun{Stasinopoulos2} tiene un MAPE menor, donde este tiene asociados unos parámetros distintos con una distribución ZOIP con menor variabilidad, por lo que no es del todo comparable con las demás parametrizaciones y distribuciones, se nota un MAPE menor al $20\%$ a partir de un tamaño de muestra mayor a 500, por lo que se puede concluir que con un tamaño de muestra mayor a 500 el modelo tendrá un MAPE aceptable para la estimación de todos los parámetros de la regresión ZOIP, sin embargo, esto siempre dependerá de la variabilidad que posean los datos.
+
+%En la tabla \ref{T_Sim_CC} se evidencia una convergencia lenta, esto probablemente se deba a la cantidad de parámetros que se deben estimar con la misma cantidad de datos simulados, además se puede observar que a través de las diferentes parametrizaciones de la distribución beta y la distribución simplex, la convergencia del parámetro de intercepto de cada una de las regresiones se hace más lenta que los demás parámetros y de manera más lenta en los interceptos de las regresiones de los componentes de inflación, incluso llevando a la no significancia del parámetro $\beta_0$ en la regresión sobre $p_1$, sin embargo el valor de este no se encuentra muy aislado de su valor verdadero esto se puede evidenciar en la figura \ref{Simu_FC_CC}, que representa el error absoluto para los parámetros regresores, donde el parámetro del intercepto del modelo de regresión del componente que explica la inflación de los unos de la distribución ZOIP-beta parametrización \citeasnoun{Ferrari2} con 10000 simulaciones tiene un error absoluto mínimo, a pesar de que su valor-p es $0.4704$. Por otra parte se puede observar que la regresión que no posee covariables, el cual es la regresión sobre el parámetro de inflación cero, su convergencia es la más rápida de todos los parámetros, esto es debido a que no se ve perturbado por los efectos de las covariables, sino que es un parámetro fijo.\\
+%
+%En términos generales la convergía de todos sus parámetros al final es muy acertada para cada uno de los valores escogidos, independientemente de su distribución y parametrización. Así que se puede concluir que el modelo de regresión ZOIP mediante la función \code{RM.ZOIP} del paquete \pkg{ZOIP} de \proglang{R} está teniendo un ajuste satisfactorio y rápido para cantidad de parámetros a estimar.
+%
+%\begin{table}[!hbt]
+%{\tiny
+%\begin{center}
+%\begin{tabular}{|c|cc|ccc|ccc|ccc|ccc|}\hline
+%Familia & Par. & $\beta$'s &\multicolumn{3}{|c|}{n=100} & \multicolumn{3}{|c|}{n=500} & \multicolumn{3}{|c|}{n=1000} & \multicolumn{3}{|c|}{n=10000} \\ \hline
+ %& & & Est. & S.e & p & Est. & S.e & p & Est. & S.e & p & Est. & S.e & p \\ \hline \hline
+%\multirow{9}{*}{R-S \footnotemark[1]} & \multirow{2}{*}{$\mu$} & $\hat{\beta_0}$ & 0.11	&0.29	&0.6915	&0.18	&0.12	&0.1249	&0.36	&0.1	&0.000361	&0.21	&0.028	&$1.21e^{-13}$\\
+%& & $\hat{\beta_1}$ & -0.81	&0.45	&0.0743	&-1.03	&0.20	&$4.59e^{-7}$ &-1.53	&0.18	&$<2.2e^{-16}$	&-1.01	&0.047	&$<2.2e^{-16}$ \\ \cline{2-15}
+%& \multirow{3}{*}{$\sigma$} & $\hat{\beta_0}$ & 0.03	&0.28	&0.929	&0.20	&0.13	&0.14002	&0.31	&0.10	&0.003 &0.34	&0.030	&$<2.2e^{-16}$ \\
+%& & $\hat{\beta_1}$ & -0.24	&0.34	&0.480	&-0.32	&0.16	&0.038	&2.68	&0.14	&$<2.2e^{-16}$	&-0.56	&0.038	&$<2.2e^{-16}$ \\
+%& & $\hat{\beta_2}$ & 1.06	&0.39	&0.006	&0.79	&0.18	&$1.71e^{-5}$	&1.03	&0.13	&$7.72e^{-16}$	&0.87	&0.039	&$<2.2e^{-16}$ \\ \cline{2-15}
+%& $p_0$ & $\hat{\beta_0}$ & 0.03	&0.02	&0.079	&0.09	&0.01	&$2.05e^{-12}$	&0.07	&0.008	&$<2.2e^{-16}$	&0.07	&0.003	&$<2.2e^{-16}$ \\ \cline{2-15}
+%& \multirow{2}{*}{$p_1$} & $\hat{\beta_0}$ & 0.50	&0.46	&0.274	&-0.43	&0.21	&0.043	&-0.21	&0.15	&0.156	&0.06	&0.047	&0.2158 \\
+%& & $\hat{\beta_1}$ & -5.23	&1.14	&0.0002	&-2.92	&0.50	&$3.86e^{-9}$	&-3.16	&0.34	&$<2.2e^{-16}$	&-4.10	&0.123	&$<2.2e^{-16}$ \\ \hline \hline
+%
+%\multirow{9}{*}{F-C \footnotemark[2]} & \multirow{2}{*}{$\mu$} & $\hat{\beta_0}$ & 0.27	&0.25	&0.2712	&0.16	&0.12	&0.1747	&0.23	&0.08	&0.006	&0.18	&0.026	&$2.04e^{-12}$ \\
+%& & $\hat{\beta_1}$ & -1.45	&0.46	&0.0018	&-0.96	&0.21	&$5.43e^{-6}$	&-0.92	&0.15	&$3.37e^{-10}$	&-0.98	&0.046	&$<2.2e^{-16}$ \\ \cline{2-15}
+%& \multirow{3}{*}{$\sigma$} & $\hat{\beta_0}$ & 0.07	&0.49	&0.889	&0.13	&0.17	&0.4354	&0.20	&0.12	&0.08358	&0.26	&0.037	&$7.35e^{-12}$ \\
+%& & $\hat{\beta_1}$ & -0.97	&0.49	&0.0476	&-0.21	&0.22	&0.3268	&-0.52	&0.15	&0.00054	&-0.44	&0.048	&$<2.2e^{-16}$ \\
+%& & $\hat{\beta_2}$ & 1.63	&0.57	&0.0041	&0.81	&0.22	&0.0003	&0.97	&0.15	&$4.61e^{-11}$ &0.93	&0.048	&$<2.2e^{-16}$ \\  \cline{2-15}
+%& $p_0$ & $\hat{\beta_0}$ & 0.12	&0.03	&0.0002	&0.07	&0.01	&$1.54e^{-9}$	&0.07	&0.01	&$<2.2e^{-16}$	&0.08	&0.003	&$<2.2e^{-16}$ \\  \cline{2-15}
+%& \multirow{2}{*}{$p_1$} & $\hat{\beta_0}$ & 1.31	&0.42	&0.0019	&0.25	&0.21	&0.2341	&-0.24	&0.15	&0.1233	&0.03	&0.047	&0.4704 \\
+%& & $\hat{\beta_1}$ & -6.99	&1.48	&$2.35e^{-6}$	&-4.07	&0.52	&$4.04e^{-15}$	&-3.36	&0.36	&$<2.2e^{-16}$	&-4.05	&0.122	&$<2.2e^{-16}$  \\ \hline \hline
+%
+%\multirow{9}{*}{original} & \multirow{2}{*}{$\mu$} & $\hat{\beta_0}$ &0.11	&0.27	&0.695	&0.22	&0.12	&0.072	&0.17	&0.09	&0.077	&0.23	&0.029	&$3.27e^{-15}$ \\
+%& & $\hat{\beta_1}$ & -1.30	&0.49	&0.008	&-1.09	&0.21	&$1.35e^{-7}$	&-1.08	&0.16	&$4.42e^{-12}$	&-1.01	&0.049	&$<2.2e^{-16}$ \\ \cline{2-15}
+%& \multirow{3}{*}{$\sigma$} & $\hat{\beta_0}$ & 0.60	&0.36	&0.095	&0.48	&0.18	&0.0087	&0.29	&0.13	&0.029	&0.34	&0.041	&$<2.2e^{-16}$ \\
+%& & $\hat{\beta_1}$ & -0.97	&0.52	&0.063	&-0.87	&0.26	&0.0010	&-0.40	&0.18	&0.028	&-0.49	&0.057	&$<2.2e^{-16}$ \\
+%& & $\hat{\beta_2}$ & 0.57	&0.42	&0.178	&0.67	&0.19	&0.0005	&0.74	&0.15	&$8.67e^{-7}$	&0.86	&0.045	&$<2.2e^{-16}$ \\ \cline{2-15}
+%& $p_0$ & $\hat{\beta_0}$ & 0.09	&0.03	&0.002	&0.09	&0.01	&$3.77e^{-12}$	&0.09	&0.01	&$<2.2e^{-16}$	&0.07	&0.003	&$<2.2e^{-16}$ \\ \cline{2-15}
+%& \multirow{2}{*}{$p_1$} & $\hat{\beta_0}$ & -0.65	&0.41	&0.113	&0.24	&0.22	&0.269	&0.12	&0.14	&0.390	&0.03	&0.048	&0.489 \\
+%& & $\hat{\beta_1}$ & -2.98	&1.17	&0.011	&-4.97	&0.61	&$6.06e^{-16}$	&-4.20	&0.39	&$<2.2e^{-16}$ 	&-4.12	&0.125	&$<2.2e^{-16}$  \\ \hline \hline
+%
+%\multirow{9}{*}{simplex} & \multirow{2}{*}{$\mu$} & $\hat{\beta_0}$ & -0.11	&0.17	&0.542	&0.23	&0.08	&0.004	&0.22	&0.05	&$6.98e^{-5}$	&0.20	&0.017	&$<2.2e^{-16}$ \\
+%& & $\hat{\beta_1}$ & -0.26	&0.36	&0.478	&-0.97	&0.15	&$3.49e^{-10}$	&-1.19	&0.11	&$<2.2e^{-16}$	&-0.99	&0.035	&$<2.2e^{-16}$ \\ \cline{2-15}
+%& \multirow{3}{*}{$\sigma$} & $\hat{\beta_0}$ & 0.91	&0.38	&0.017	&0.51	&0.18	&0.0039	&0.30	&0.15	&0.0052	&0.23	&0.047	&$6.98e^{-7}$ \\
+%& & $\hat{\beta_1}$ & 2.65	&0.57	&$2.79e^{-6}$	&2.83	&0.24	&$<2.2e^{-16}$	&3.18	&0.18	&$<2.2e^{-16}$	&3.10	&0.057	&$<2.2e^{-16}$ \\
+%& & $\hat{\beta_2}$ & 0.50	&0.58	&0.389	&0.93	&0.25	&0.0024	&0.72	&0.19	&0.00018	&0.93	&0.059	&$<2.2e^{-16}$ \\  \cline{2-15}
+%& $p_0$ & $\hat{\beta_0}$ & 0.06	&0.02	&0.012	&0.05	&0.01	&$2.90e^{-7}$	&0.07	&0.01	&$<2.2e^{-16}$	&0.07	&0.003	&$<2.2e^{-16}$ \\   \cline{2-15}
+%& \multirow{2}{*}{$p_1$} & $\hat{\beta_0}$ & -0.88	&0.53	&0.097	&-0.13	&0.20	&0.504	&0.07	&0.16	&0.642	&0.04	&0.047	&0.370 \\
+%& & $\hat{\beta_1}$ & -2.10	&1.14	&0.065	&-3.56	&0.51	&$1.72e^{-12}$	&-4.48	&0.42	&$<2.2e^{-16}$	&-4.12	&0.123	&$<2.2e^{-16}$ \\ \hline
+%
+%\end{tabular}
+%\caption{Simulación de un modelo de regresión ZOIP para distintas parametrizaciones, distribuciones y valores de n (100, 500, 1000, 10000)}
+%\label{T_Sim_CC}
+%\end{center}
+%}
+%\end{table}
+%
+%
+%\begin{figure}
+	%\begin{center}
+		%\includegraphics[scale=0.45]{F_C_CC_mu.eps}
+		%\quad
+		%\includegraphics[scale=0.45]{F_C_CC_Sigma.eps}	
+		%\\
+		%\includegraphics[scale=0.45]{F_C_CC_p0.eps}
+		%\quad
+		%\includegraphics[scale=0.45]{F_C_CC_p1.eps}	
+		%\caption{Error absoluto de los parámetros de regresión ZOIP en una simulación con n=100, 500, 1000, 10000, parametrización Ferrari \& Cribari-Neto (2004)}
+		%\label{Simu_FC_CC}
+	%\end{center}
+%\end{figure}
+%
+
+%\footnotetext[1]{Rigby y Stasinopoulos (2008)}
+%\footnotetext[2]{Ferrari y Cribari-Neto (2004)}
+
+
+\subsection{Datos reales}
+En una entidad financiera tiene gran importancia conocer el comportamiento del porcentaje de utilización de las tarjetas de crédito (tdc), con el fin de conocer el comportamiento de la cartera de tarjeta de crédito, además de detectar los diferentes factores que pueden afectar este tipo de cartera. Se define a $y$ como el porcentaje de uso de una tdc, claramente $y$ se encuentra entre cero y uno, pero adicional es normal que se tengan tdc que no son utilizadas ($y=0$) y tdc que están utilizadas en la totalidad de su cupo asignado ($y=1$), por lo que se trata a $y$ como una variable aleatoria perteneciente a datos proporcionales inflados con ceros y unos. Se tiene un total de 9206 tarjetas de crédito. Se quiere estudiar el impacto de algunas variables sobre el porcentaje de utilización de una tdc, para ello se busca ajustar un modelo de regresión ZOIP mediante la función \code{RM.ZOIP} del paquete \pkg{ZOIP} de \proglang{R}, que permita explicar el comportamiento del porcentaje de utilización de una tdc mediante bajo las siguientes tres variables, \textsl{Score:} variable entre cero y 1000 que para nuestro caso se cambiara de escala entre cero y uno, está explica la calificación sobre el comportamiento de pago de un cliente que pertenece a la entidad financiera, donde cero es el peor valor y mil un comportamiento de pago ideal; \textsl{Prom Cuotas:} se define como el promedio al que ha diferido sus compras en los últimos seis meses; \textsl{Cupo tdc Entidad:} es el cupo de la tdc asignada, esta será tratada como el logaritmo de su cupo más uno, para una mayor estabilidad de su varianza.
+
+En el modelo de regresión ZOIP se deben definir cuatro diferentes modelos de regresión, para ser ajustados que nos permitan explicar el comportamiento de los cuatro parámetros que se compone la distribución ZOIP, adicionalmente dependiendo de la parametrización o distribución que se esté utilizando, se debe utilizar una función enlace adecuada para cada regresión, en las ecuaciones dadas en \eqref{A_eq_reg} se pueden ver los modelos de regresión a aplicar en cada parámetro, en estas ecuaciones se ve que dependen de una función enlace $h(\cdot)$, en la tabla \ref{T_F_enlace2} se muestran las diferentes funciones enlaces adecuadas para cada parámetro dependiendo de la distribución escogida y/o la parametrización.
+
+\begin{equation}
+\begin{split}
+&h_1(\mu_{i})=\beta_0+\beta_1 x_{1i}+\beta_2 x_{2i}+\beta_3 x_{3i}+\epsilon_i,\\
+&h_2(\sigma_{i})=\beta_0+\beta_1 x_{1i}+\beta_2 x_{2i}+\beta_3 x_{3i}+\epsilon_i,\\
+&h_3(p_0)=\beta_0+\beta_1 x_{1i}+\beta_2 x_{3i}+\epsilon_i,\\
+&h_4(p_1) =\beta_0+\epsilon_i
+\end{split}
+\label{A_eq_reg}
+\end{equation}
+
+donde $x_{1i}$: es el valor del score del i-esimo individuo asociada a la tarjeta de crédito, $x_{2i}$: es valor del promedio de cuotas al que difiere sus compras el i-esimo individuo asociada a la tarjeta de crédito, $x_{3i}$: es el valor del cupo otorgado en la tdc del i-esimo individuo. 
+
+\begin{table}[!hbt]
+{\scriptsize
+\begin{center}
+\begin{tabular}{|c|c|c|}\hline
+Familia & Parámetro & $h(\cdot)$ \\ \hline
+\multirow{4}{*}{R-S} & $\mu$ & Logit \\
+ & $\sigma$ & Logit \\
+ & $p_0$ & Logit \\
+ & $p_1$ & NA \\ \hline
+
+\multirow{4}{*}{F-C} & $\mu$ & Logit \\
+ & $\sigma$ & Log. \\
+ & $p_0$ & Logit \\
+ & $p_1$ & NA \\ \hline
+
+\multirow{4}{*}{original} & $\mu$ & Log. \\
+ & $\sigma$ & Log. \\
+ & $p_0$ & Logit \\
+ & $p_1$ & NA \\ \hline
+
+\multirow{4}{*}{simplex} & $\mu$ & Logit \\
+ & $\sigma$ & Log. \\
+ & $p_0$ & Logit \\
+ & $p_1$ & NA \\ \hline
+
+\end{tabular}
+\caption{Funciones de enlace adecuadas para cada parámetro, según su distribución y/o parametrización para el modelo de regresión ZOIP en el porcentaje de utilización de una tdc.}
+\label{T_F_enlace2}
+\end{center}
+}
+\end{table}
+
+En las ecuaciones dadas en \eqref{A_eq_reg} se puede ver como los parámetros $\mu$, $\sigma$ serán explicados por las variables score, cupo de su tdc y el promedio al que difiere sus compras, el parámetro $p_0$ por las variables score y el cupo de su tdc, para observar como ajusta el parámetro $p_1$ sin covariables, no se pusieron variables regresoras.
+
+
+\begin{table}[!hbt]
+{\scriptsize
+\begin{center}
+\begin{tabular}{|c|c|c|ccc|c|c|}\hline
+Familia & Parámetro & $\beta$'s & Estimación & Error estándar & Valor P & Log-Verosimilitud & Iteraciones \\ \hline \hline
+\multirow{12}{*}{R-S} & \multirow{4}{*}{$\mu$} & $\hat{\beta_0}$ & -0.046	&0.050	&0.3618 & \multirow{12}{*}{-5732.63} & \multirow{12}{*}{101}  \\
+& & $\hat{\beta_1}$ & -0.354	&0.107	&0.0009 & &\\
+& & $\hat{\beta_2}$ & 0.022	&0.002	&$<2.2e^{-16}$ & & \\
+& & $\hat{\beta_3}$ & -0.025	&0.009	&0.0074 & & \\ \cline{2-6}
+& \multirow{4}{*}{$\sigma$} & $\hat{\beta_0}$ & 0.822	&0.038	&$<2.2e^{-16}$  & &\\
+& & $\hat{\beta_1}$ & -0.197	&0.078	&0.0114  & &\\
+& & $\hat{\beta_2}$ & -0.006	&0.002	&0.0013  & &\\
+& & $\hat{\beta_3}$ & -0.003	&0.007	&0.6741  & &\\ \cline{2-6}
+& \multirow{3}{*}{$p_0$} & $\hat{\beta_0}$ & -1.834	&0.096	&$<2.2e^{-16}$  & &\\
+& & $\hat{\beta_1}$ & 0.882	&0.178	&0.0000007  & &\\
+& & $\hat{\beta_2}$ & -0.007	&0.015	&0.6480  & &\\ \cline{2-6}
+& $p_1$ & $\hat{\beta_0}$ & 0.070	&0.003	&$<2.2e^{-16}$  & &\\ \hline \hline
+
+\multirow{12}{*}{F-C} & \multirow{4}{*}{$\mu$} & $\hat{\beta_0}$ & -0.045	&0.050	&0.3667  & \multirow{12}{*}{-5732.50} & \multirow{12}{*}{84} \\
+& & $\hat{\beta_1}$ & -0.354	&0.107	&0.0009   & &\\
+& & $\hat{\beta_2}$ & 0.022	&0.002	&$<2.2e^{-16}$   & &\\
+& & $\hat{\beta_3}$ & -0.025	&0.009	&0.0074   & &\\ \cline{2-6}
+& \multirow{4}{*}{$\sigma$} & $\hat{\beta_0}$ & 0.068	&0.045	&0.1286   & &\\
+& & $\hat{\beta_1}$ & 0.238	&0.094	&0.0117   & &\\
+& & $\hat{\beta_2}$ & 0.007	&0.002	&0.0012   & &\\
+& & $\hat{\beta_3}$ & 0.003	&0.008	&0.6854   & &\\ \cline{2-6}
+& \multirow{3}{*}{$p_0$} & $\hat{\beta_0}$ & -1.834	&0.959	&$<2.2e^{-16}$   & &\\
+& & $\hat{\beta_1}$ & 0.882	&0.178	&0.0000007   & &\\
+& & $\hat{\beta_2}$ & -0.007	&0.015	&0.6481   & &\\ \cline{2-6}
+& $p_1$ & $\hat{\beta_0}$ & 0.070	&0.003	&$<2.2e^{-16}$   & &\\ \hline \hline
+
+\multirow{12}{*}{original} & \multirow{4}{*}{$\mu$} & $\hat{\beta_0}$ & -0.649	&0.048	&$<2.2e^{-16}$  & \multirow{12}{*}{-5733.28} & \multirow{12}{*}{91} \\
+& & $\hat{\beta_1}$ & 0.035	&0.103	&0.7311   & &\\
+& & $\hat{\beta_2}$ & 0.019	&0.002	&$<2.2e^{-16}$   & &\\
+& & $\hat{\beta_3}$ & -0.011	&0.009	&0.2267 & & \\ \cline{2-6}
+& \multirow{4}{*}{$\sigma$} & $\hat{\beta_0}$ & -0.611	&0.054	&$<2.2e^{-16}$   & &\\
+& & $\hat{\beta_1}$ & 0.397	&0.111	&0.0003   & &\\
+& & $\hat{\beta_2}$ & -0.002	&0.003	&0.4724   & &\\
+& & $\hat{\beta_3}$ & 0.015	&0.010	&0.1456   & &\\ \cline{2-6}
+& \multirow{3}{*}{$p_0$} & $\hat{\beta_0}$ & -1.834	&0.096	&$<2.2e^{-16}$   & &\\
+& & $\hat{\beta_1}$ & 0.882	&0.178	&0.0000007   & &\\
+& & $\hat{\beta_2}$ & -0.007	&0.015	&0.6480   & &\\ \cline{2-6}
+& $p_1$ & $\hat{\beta_0}$ & 0.070	&0.003	&$<2.2e^{-16}$   & &\\ \hline \hline
+
+\multirow{12}{*}{simplex} & \multirow{4}{*}{$\mu$} & $\hat{\beta_0}$ & 0.180	&0.050	&0.0003  & \multirow{12}{*}{-22703.67} & \multirow{12}{*}{123} \\
+& & $\hat{\beta_1}$ & -3.889	&0.206	&$<2.2e^{-16}$& &\\
+& & $\hat{\beta_2}$ & 0.166	&0.004	&$<2.2e^{-16}$& &\\
+& & $\hat{\beta_3}$ & 0.128	&0.019	&$5.84e^{-12}$& & \\ \cline{2-6}
+& \multirow{4}{*}{$\sigma$} & $\hat{\beta_0}$ & 11.586	&0.062	&$<2.2e^{-16}$& &\\
+& & $\hat{\beta_1}$ & 0.063	&0.240	&0.7915& &\\
+& & $\hat{\beta_2}$ & 0.133	&0.004	&$<2.2e^{-16}$   & &\\
+& & $\hat{\beta_3}$ & -0.344	&0.023	&$<2.2e^{-16}$   & &\\ \cline{2-6}
+& \multirow{3}{*}{$p_0$} & $\hat{\beta_0}$ & -1.834	&0.096	&$<2.2e^{-16}$   & &\\
+& & $\hat{\beta_1}$ & 0.882	&0.178	&0.0000007   & &\\
+& & $\hat{\beta_2}$ & -0.007	&0.015	&0.6480   & &\\ \cline{2-6}
+& $p_1$ & $\hat{\beta_0}$ & 0.070	&0.003	&$<2.2e^{-16}$   & &\\ \hline
+
+\end{tabular}
+\caption{Parametros regresores estimados de un modelo de regresión ZOIP en el porcentaje de utilización de una tdc.}
+\label{T_Apli_CC}
+\end{center}
+}
+\end{table}
+
+
+En la tabla \ref{T_Apli_CC} se tiene información sobre como las variables influyen en el modelo, primero se puede ver que al modelar el parámetro de la media, es decir, el porcentaje medio de utilización de la tdc, la variable regresora score afecta de manera negativa y significativa en cada uno de los modelos ajustados, excepto en el mo\-de\-lo con parametrización original en el cual el parámetro no dio significativo; esto nos indica que a un mejor comportamiento de pago, menos utilización de la tdc, sobre el parámetro del promedio de cuotas diferidas vemos como el parámetro $\beta_2$ sin excepción alguna en todos los modelos es la variable más significativa que permite explicar la proporción media de la utilización de una tdc, esto nos indica que a medida que los clientes difieren a mayores cuotas sus compras con la tdc estarán utilizando más su tdc, algo muy lógico, desde el punto de vista del problema; ahora el parámetro $\beta_3$ asociado al cupo de su tdc tiene un efecto negativo aunque no muy fuerte sobre la variable respuesta excepto en el modelo ZOIP-simplex donde tiene un efecto positivo mucho más fuerte.\\
+
+Al analizar el efecto de la variabilidad de la utilización de las tdc, se observa como el parámetro de score tiene un efecto positivo sobre la variabilidad excepto en el modelo ZOIP-beta parametrización \citeasnoun{Stasinopoulos2}, cabe resaltar que $\beta_1$ no es significativo en el modelo simplex. Además el parámetro $\beta_3$ asociado al cupo de la tdc no influye sobre la variabilidad en ninguno de los modelos propuestos.\\
+
+Por otra parte el efecto de que alguien no utilice su tdc es exactamente igual en los cuatro modelos, esto por la metodología de estimación y se puede observar como el cupo de la tdc no influye. Además como la variable score que describe el comportamiento de pago de una persona influye de manera positiva con la no utilización de la tdc.\\
+
+En el porcentaje de utilización global de la tdc, vemos como sin ninguna covariable el parámetro es significativo, indicándonos como no se ve afectado su estimación del parámetro por la estimación de los parámetros regresores de los demás modelos.\\
+
+Al analizar el valor de la log-verosimilitud se observa que el mejor modelo de regresión que explica el porcentaje de utilización de una tdc en esta entidad financiera es la regresión ZOIP-beta, ya que posee un valor de log-verosimilitud menor que el modelo de regresión ZOIP-simplex, sin embargo no importa la parametrización que se tenga en la regresion ZOIP-beta, porque el valor de la log-verosimilitud son significativamente iguales, sin embargo el modelo que requiere menor número de iteraciones para ser ajustado es la regresión ZOIP-beta parametrización \citeasnoun{Ferrari2} seguido por la parametrización original y por último la parametrizacion de \citeasnoun{Stasinopoulos2}.
+
+
+
+\section{Conclusión}
+
+El modelo de regresión ZOIP, es un modelo de regresión de efectos fijos que es desarrollado bajo la distribución ZOIP y el cual se encarga de encontrar las covariables o factores que más influyen en una variable respuesta cuya distribución asociada es una distribución ZOIP. La estimación del efecto de las covariables sobre la variable respuesta se realiza mediante máxima verosimilitud, dicha maximización de la verosimilitud no tiene una solución cerrada analíticamente, por lo que se realiza computacionalmente y el paquete \pkg{ZOIP} de \proglang{R} da una solución a esto. Según los estudios de simulación realizados en este trabajo, las estimaciones convergen con un tamaño de muestra moderado a sus valores reales; aunque en ocasiones ocurre que las convergencias de los efectos de las covariables asociadas a los parámetros de inflación requieren un mayor número de muestras para demostrar su convergencia.\\
+
+En el modelo de regresión ZOIP y el paquete \pkg{ZOIP} de \proglang{R} es posible realizar de una manera muy sencilla los principales tipos de regresiones para datos proporciones inflados con ceros y unos que existen, como la regresión simplex y la regresión beta bajo diferentes parametrizaciones, además el modelo de regresión ZOIP permite realizar ajustes a modelos inflados unilateralmente, es decir, donde solo haya datos proporcionales con valores cero o uno, e incluso realizar un ajuste sobre un modelo de regresión para datos proporcionales sin inflaciones.
+
+
+
+
+%% //// --------------------------------------------------------------------------------
+% -------------------------------------------------------------------------------------
+% Fin del cuerpo del documento
+% **** --------------------------------------------------------------------------------
+% **** --------------------------------------------------------------------------------
+% Espacio para colocar el nombre del archivo *.bib (sin la extensión .bib) que contiene
+% las referencias bibliográficas del artículo utilizando el estilo bibliográfico BibTeX
+% "\bibliography{.}"
+% **** --------------------------------------------------------------------------------
+    \bibliography{references}
+% //// --------------------------------------------------------------------------------
+% //// --------------------------------------------------------------------------------
+    \appendix% !no modificar esta línea¡
+% -------------------------------------------------------------------------------------
+% Espacio para ubicar los apéndices: tablas y gráficas
+% **** --------------------------------------------------------------------------------
+
+
+
+% -------------------------------------------------------------------------------------
+% Fin del artículo
+% **** --------------------------------------------------------------------------------
+\end{document}
+
