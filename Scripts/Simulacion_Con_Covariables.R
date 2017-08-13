@@ -3,8 +3,8 @@ library(ZOIP)
 
 n<-c(25,50,seq(100,10000,by=100))
 nrep=1000
-family='Original'
-link=c('exp','exp','identity','logit')
+family='F-C'
+link=c('logit','log','logit','logit')
 
 mu.b0<-NULL
 mu.b1<-NULL
@@ -18,7 +18,7 @@ p0.b0<-c<-NULL
 p1.b0<-c<-NULL
 p1.b1<-c<-NULL
 
-j=10
+j=30
 while(j<=length(n)){
   i=1
   while(i<=nrep){
@@ -27,14 +27,17 @@ while(j<=length(n)){
     
     c1<-0.2;c2<--1
     
-    mu_i<-exp(c1+c2*x1)
+    mu_i<-inv.logit(c1+c2*x1)
     
-    b1<-0.3;b2<-3;b3<-0.9
+    b1<-0.3;b2<--2;b3<--4
     
     sigma_i<-exp(b1+b2*x1+b3*x2)
     
-    d1<-0.1
-    p0_i<-rep(d1,n[j])
+    #d1<-0.1
+    d1<-0.05
+    d2<--7
+    #p0_i<-rep(d1,n[j])
+    p0_i<-inv.logit(d1+d2*x1)
     
     e1<-0.02;e2<--4
     p1_i<-inv.logit(e1+e2*x2)
@@ -47,8 +50,9 @@ while(j<=length(n)){
     data<-as.data.frame(cbind(y_i,x1,x2))
     
     mod<-RM.ZOIP(formula.mu=y_i~x1,formula.sigma=~x1+x2
-                 ,formula.p0=~1,formula.p1=~x2
+                 ,formula.p0=~x1,formula.p1=~x2
                  ,data=data,link=link,family=family)
+    summary(mod)
     coefi<-coef(mod)
     mu.b0[i]<-coefi$Parameters.mu[1]
     mu.b1[i]<-coefi$Parameters.mu[2]
